@@ -10,12 +10,20 @@ board = []
 
 
 def create_board(row, col, x, y):
+    global cell_size
     for a in range(row):
         board.append([])
         for _ in range(col):
             board[a].append(0)
 
     board[len(board) - y][x - 1] = 1
+
+    if x >= 4 or y >= 4:
+        cell_size = 1
+    elif x > 9 or y > 9:
+        cell_size = 2
+    else:
+        cell_size = 0
 
 
 def number_of_moves(x, y):
@@ -111,6 +119,45 @@ def print_board():
     print("\n")
 
 
+def print_status():
+    row_length = len(board)
+    col_length = len(board[0])
+    line_length = (col_length * (cell_size + 3)) + 3
+    cell_str = [["_ ", "__ ", "___ "], ["X ", " X ", "  X "], ["{} ", " {} ", "  {} "]]
+    cell_space = [" ", "  ", "   "]
+    print(" " + "-" * line_length)
+
+    for x in range(row_length):
+        this_row = ""
+        for y in board[x]:
+            if y == 0:
+                this_row += cell_str[0][cell_size]
+            elif y == 'x':
+                this_row += cell_str[1][cell_size]
+            elif y == "*":
+                this_row += cell_str[2][cell_size].format(y)
+            elif type(y) == int:
+                if len(str(y)) == 1:
+                    this_row += " " + str(y) + " "
+                elif len(str(y)) == 2:
+                    this_row += str(y) + " "
+        print(f"{row_length - x}| {this_row}|")
+
+    columns = ''
+
+    if cell_size > 0:
+        columns = " "
+        for x in range(col_length):
+            columns += str(x + 1) + cell_space[cell_size]
+    else:
+        columns = " "
+        for x in range(col_length):
+            columns += str(x + 1) + "  "
+
+    print(" " + "-" * line_length)
+    print(f'   {columns}')
+
+
 def zero_in_board():
     for row in board:
         if 0 in row:
@@ -132,14 +179,18 @@ def solve():
     for move in possible_moves(xc, yc):
         if board[move[0]][move[1]] == 0:
             board[move[0]][move[1]] = last_index + 1
-        print_board()
         if solve():
             return True
         board[move[0]][move[1]] = 0
 
-    if not zero_in_board():
+    if zero_in_board():
+        return False
+    else:
         return True
 
 
-create_board(3, 4, 1, 3)
-solve()
+create_board(8,8,1,1)
+if solve():
+    print_status()
+else:
+    print("0")
