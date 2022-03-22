@@ -5,7 +5,7 @@
 #          [0, 0, 0, 0, 0]]
 
 # added comment
-
+# board = [[1, 4, 7, 10], [12, 9, 2, 5], [3, 6, 11, 8]]
 board = []
 
 
@@ -47,22 +47,13 @@ def possible_moves(x, y):
 
     last_index = 0
 
-    for x in range(len(board)):
-        for y in range(len(board[0])):
-            if board[x][y] > last_index:
-                last_index = board[x][y]
+    for xc in range(len(board)):
+        for yc in range(len(board[0])):
+            if board[xc][yc] > last_index:
+                last_index = board[xc][yc]
 
     if x == -1 and y == -1:
-        for a in range(len(board)):
-            for b in range(len(board[0])):
-                if board[a][b] == last_index:
-                    x, y = a, b
-                    break
-                elif board[a][b] != 0:
-                    x, y = a, b
-                    break
-            if board[a][b] == last_index:
-                break
+        pass
 
     for a in range(len(positions)):
         for b in range(2):
@@ -120,28 +111,35 @@ def print_board():
     print("\n")
 
 
+def zero_in_board():
+    for row in board:
+        if 0 in row:
+            return True
+    else:
+        return False
+
+
 def solve():
+    global board
     last_index = 0
 
     for x in range(len(board)):
         for y in range(len(board[0])):
             if board[x][y] > last_index:
                 last_index = board[x][y]
+                xc, yc = x, y
 
-    for move in possible_moves(-1, -1):
+    for move in possible_moves(xc, yc):
         if board[move[0]][move[1]] == 0:
             board[move[0]][move[1]] = last_index + 1
         print_board()
         if solve():
             return True
-
         board[move[0]][move[1]] = 0
 
-    return False
+    if not zero_in_board():
+        return True
 
 
-create_board(3, 3, 1, 1)
-possible_moves(-1, -1)
+create_board(3, 4, 1, 3)
 solve()
-print_board()
-
