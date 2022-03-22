@@ -45,16 +45,23 @@ def possible_moves(x, y):
     moves = 0
     temp = 0
 
+    last_index = 0
+
+    for x in range(len(board)):
+        for y in range(len(board[0])):
+            if board[x][y] > last_index:
+                last_index = board[x][y]
+
     if x == -1 and y == -1:
         for a in range(len(board)):
             for b in range(len(board[0])):
-                if board[a][b] == "x":
+                if board[a][b] == last_index:
                     x, y = a, b
                     break
                 elif board[a][b] != 0:
                     x, y = a, b
                     break
-            if board[a][b] == "x":
+            if board[a][b] == last_index:
                 break
 
     for a in range(len(positions)):
