@@ -1,20 +1,13 @@
-# board = [[0, 0, 0, 0, "x"],
-#          [0, 0, 1, 0, 0],
-#          [0, 0, 0, 2, 0],
-#          [0, 0, 0, 0, 0],
-#          [0, 0, 0, 0, 0]]
-
-# added comment
-# board = [[1, 4, 7, 10], [12, 9, 2, 5], [3, 6, 11, 8]]
+# TODO: improve time
 board = []
 
 
 def create_board(row, col, x, y):
     global cell_size
-    for a in range(row):
+    for z in range(row):
         board.append([])
         for _ in range(col):
-            board[a].append(0)
+            board[z].append(0)
 
     board[len(board) - y][x - 1] = 1
 
@@ -205,8 +198,8 @@ def solve():
             if board[x][y] > last_index:
                 last_index = board[x][y]
                 xc, yc = x, y
-
-    for move in possible_moves(xc, yc):
+    moving = dict(sorted(possible_moves(xc, yc).items(), key=lambda item: item[1]))
+    for move in moving:
         if board[move[0]][move[1]] == 0:
             board[move[0]][move[1]] = last_index + 1
         if solve():
@@ -290,7 +283,7 @@ def play_game():
             print(f"Your knight visited {moves} squares!")
             break
     else:
-        print("What a great tour! Congratulations!")
+        print("\nWhat a great tour! Congratulations!")
 
 
 def game():
@@ -315,7 +308,7 @@ def game():
             print("Invalid dimensions!")
     while True:
         try:
-            create_board(dim_x, dim_y, a, b)
+            create_board(dim_x, dim_y, b, a)
             break
         except IndexError:
             print("Invalid dimensions!")
