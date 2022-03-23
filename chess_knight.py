@@ -1,8 +1,5 @@
 # TODO: improve time
 # TODO: correct what really is x and y
-import logging
-
-logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 board = []
 
 
@@ -220,7 +217,6 @@ def set_next_move():
     while True:
         try:
             a, b = [int(x) for x in str(input("Enter your next move: ")).split()]
-            logging.info("move " + str(a) + "," + str(b))
             pos = (len(board) - b, a - 1)
             if pos in moves_dict.keys():
                 break
@@ -230,7 +226,6 @@ def set_next_move():
             while True:
                 try:
                     a, b = [int(x) for x in str(input("Invalid move! Enter your next move: ")).split()]
-                    logging.info("move " + str(a) + "," + str(b))
                     pos = (len(board) - b, a - 1)
                     if pos in moves_dict.keys():
                         break
@@ -297,7 +292,6 @@ def game():
     while True:
         try:
             dim_y, dim_x = [int(x) for x in str(input("Enter your board dimensions: ")).split()]
-            logging.info(f"dim {dim_x}, {dim_y}")
             if dim_x <= 0 or dim_y <= 0:
                 raise ValueError
             break
@@ -306,7 +300,6 @@ def game():
     while True:
         try:
             b, a = [int(x) for x in str(input("Enter the knight's starting position: ")).split()]
-            logging.info(f"start pos {a}, {b}")
             if a <= 0 or b <= 0:
                 raise ValueError
             elif a > dim_x or b > dim_y:
@@ -325,7 +318,6 @@ def game():
 
     while True:
         ans = str(input("Do you want to try the puzzle? (y/n): "))
-        logging.info(f"game start {ans}")
         try:
             if ans == "y":
                 if solve():
