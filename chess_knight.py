@@ -1,4 +1,8 @@
 # TODO: improve time
+# TODO: correct what really is x and y
+import logging
+
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 board = []
 
 
@@ -21,7 +25,7 @@ def create_board(row, col, x, y):
 
 def number_of_moves(x, y):
     positions = [[1, 2], [2, 1], [-1, 2], [2, -1], [1, -2], [-2, 1], [-1, -2], [-2, -1]]
-    moves = 0
+    moves = -1
     temp = 0
 
     for a in range(len(positions)):
@@ -216,6 +220,7 @@ def set_next_move():
     while True:
         try:
             a, b = [int(x) for x in str(input("Enter your next move: ")).split()]
+            logging.info("move " + str(a) + "," + str(b))
             pos = (len(board) - b, a - 1)
             if pos in moves_dict.keys():
                 break
@@ -225,6 +230,7 @@ def set_next_move():
             while True:
                 try:
                     a, b = [int(x) for x in str(input("Invalid move! Enter your next move: ")).split()]
+                    logging.info("move " + str(a) + "," + str(b))
                     pos = (len(board) - b, a - 1)
                     if pos in moves_dict.keys():
                         break
@@ -276,8 +282,8 @@ def play_game():
 
     for x in checking:
         if x != "*" and x != max_moves:
-            print("No more possible moves!")
-            moves = 0
+            print("\nNo more possible moves!")
+            moves = 1
             for y in board:
                 moves += y.count("*")
             print(f"Your knight visited {moves} squares!")
@@ -290,7 +296,8 @@ def game():
     global board
     while True:
         try:
-            dim_x, dim_y = [int(x) for x in str(input("Enter your board dimensions: ")).split()]
+            dim_y, dim_x = [int(x) for x in str(input("Enter your board dimensions: ")).split()]
+            logging.info(f"dim {dim_x}, {dim_y}")
             if dim_x <= 0 or dim_y <= 0:
                 raise ValueError
             break
@@ -298,7 +305,8 @@ def game():
             print("Invalid dimensions!")
     while True:
         try:
-            a, b = [int(x) for x in str(input("Enter the knight's starting position: ")).split()]
+            b, a = [int(x) for x in str(input("Enter the knight's starting position: ")).split()]
+            logging.info(f"start pos {a}, {b}")
             if a <= 0 or b <= 0:
                 raise ValueError
             elif a > dim_x or b > dim_y:
@@ -314,19 +322,29 @@ def game():
             print("Invalid dimensions!")
 
     original_board = [x.copy() for x in board]
-    ans = str(input("Do you want to try the puzzle? (y/n): "))
-    if ans == "y":
-        if solve():
-            board = original_board
-            play_game()
-        else:
-            print("No solution exists!")
-    elif ans == "n":
-        if solve():
-            print("Here's the solution!")
-            print_status()
-        else:
-            print("No solution exists!")
+
+    while True:
+        ans = str(input("Do you want to try the puzzle? (y/n): "))
+        logging.info(f"game start {ans}")
+        try:
+            if ans == "y":
+                if solve():
+                    board = original_board
+                    play_game()
+                else:
+                    print("No solution exists!")
+                break
+            elif ans == "n":
+                if solve():
+                    print("Here's the solution!")
+                    print_status()
+                else:
+                    print("No solution exists!")
+                break
+            else:
+                raise IndexError
+        except IndexError:
+            print("Invalid input!")
 
 
 if __name__ == "__main__":
