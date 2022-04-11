@@ -1,5 +1,8 @@
 # TODO: improve time
 # TODO: correct what really is x and y
+import cProfile
+import pstats
+
 board = []
 
 
@@ -289,55 +292,63 @@ def play_game():
 
 def game():
     global board
-    while True:
-        try:
-            dim_y, dim_x = [int(x) for x in str(input("Enter your board dimensions: ")).split()]
-            if dim_x <= 0 or dim_y <= 0:
-                raise ValueError
-            break
-        except ValueError:
-            print("Invalid dimensions!")
-    while True:
-        try:
-            b, a = [int(x) for x in str(input("Enter the knight's starting position: ")).split()]
-            if a <= 0 or b <= 0:
-                raise ValueError
-            elif a > dim_x or b > dim_y:
-                raise ValueError
-            break
-        except ValueError:
-            print("Invalid dimensions!")
-    while True:
-        try:
-            create_board(dim_x, dim_y, b, a)
-            break
-        except IndexError:
-            print("Invalid dimensions!")
+    # while True:
+    #     try:
+    #         dim_y, dim_x = [int(x) for x in str(input("Enter your board dimensions: ")).split()]
+    #         if dim_x <= 0 or dim_y <= 0:
+    #             raise ValueError
+    #         break
+    #     except ValueError:
+    #         print("Invalid dimensions!")
+    # while True:
+    #     try:
+    #         b, a = [int(x) for x in str(input("Enter the knight's starting position: ")).split()]
+    #         if a <= 0 or b <= 0:
+    #             raise ValueError
+    #         elif a > dim_x or b > dim_y:
+    #             raise ValueError
+    #         break
+    #     except ValueError:
+    #         print("Invalid dimensions!")
+    # while True:
+    #     try:
+    #         create_board(dim_x, dim_y, b, a)
+    #         break
+    #     except IndexError:
+    #         print("Invalid dimensions!")
+    create_board(10,10, 1, 1)
 
     original_board = [x.copy() for x in board]
+    solve()
+    print_status()
 
-    while True:
-        ans = str(input("Do you want to try the puzzle? (y/n): "))
-        try:
-            if ans == "y":
-                if solve():
-                    board = original_board
-                    play_game()
-                else:
-                    print("No solution exists!")
-                break
-            elif ans == "n":
-                if solve():
-                    print("Here's the solution!")
-                    print_status()
-                else:
-                    print("No solution exists!")
-                break
-            else:
-                raise IndexError
-        except IndexError:
-            print("Invalid input!")
+    # while True:
+    #     ans = str(input("Do you want to try the puzzle? (y/n): "))
+    #     try:
+    #         if ans == "y":
+    #             if solve():
+    #                 board = original_board
+    #                 play_game()
+    #             else:
+    #                 print("No solution exists!")
+    #             break
+    #         elif ans == "n":
+    #             if solve():
+    #                 print("Here's the solution!")
+    #                 print_status()
+    #             else:
+    #                 print("No solution exists!")
+    #             break
+    #         else:
+    #             raise IndexError
+    #     except IndexError:
+    #         print("Invalid input!")
 
 
 if __name__ == "__main__":
-    game()
+    with cProfile.Profile() as p:
+        game()
+
+    stats = pstats.Stats(p)
+    stats.sort_stats(pstats.SortKey.TIME)
+    stats.dump_stats(filename="stats.prof")
